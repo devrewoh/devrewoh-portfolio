@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"regexp"
 	"strings"
 	"syscall"
 	"time"
@@ -23,21 +22,6 @@ type Server struct {
 	addr   string
 	logger *slog.Logger
 }
-
-// ContactFormData represents contact form input
-type ContactFormData struct {
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Message string `json:"message"`
-}
-
-// ValidationError represents form validation errors
-type ValidationError struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
-
-var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 
 // NewServer creates a new server instance with configured routes
 func NewServer(addr string) *Server {
@@ -180,98 +164,6 @@ func (s *Server) handle404(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 	component := NotFoundPage()
 	s.renderTemplate(w, r, component, "404")
-}
-
-// validateContactForm validates contact form data
-func (s *Server) validateContactForm(data ContactFormData) []ValidationError {
-	var errors []ValidationError
-
-	// Name validation
-	data.Name = strings.TrimSpace(data.Name)
-	if len(data.Name) == 0 {
-		errors = append(errors, ValidationError{
-			Field: "name", Message: "Name is required",
-		})
-	} else if len(data.Name) > 100 {
-		errors = append(errors, ValidationError{
-			Field: "name", Message: "Name must be less than 100 characters",
-		})
-	}
-
-	// Email validation
-	data.Email = strings.TrimSpace(strings.ToLower(data.Email))
-	if len(data.Email) == 0 {
-		errors = append(errors, ValidationError{
-			Field: "email", Message: "Email is required",
-		})
-	} else if !emailRegex.MatchString(data.Email) {
-		errors = append(errors, ValidationError{
-			Field: "email", Message: "Please enter a valid email address",
-		})
-	} else if len(data.Email) > 254 {
-		errors = append(errors, ValidationError{
-			Field: "email", Message: "Email must be less than 254 characters",
-		})
-	}
-
-	// Message validation
-	data.Message = strings.TrimSpace(data.Message)
-	if len(data.Message) == 0 {
-		errors = append(errors, ValidationError{
-			Field: "message", Message: "Message is required",
-		})
-	} else if len(data.Message) < 10 {
-		errors = append(errors, ValidationError{
-			Field: "message", Message: "Message must be at least 10 characters",
-		})
-	} else if len(data.Message) > 1000 {
-		errors = append(errors, ValidationError{
-			Field: "message", Message: "Message must be less than 1000 characters",
-		})
-	}
-
-	return errors
-}
-
-// handleContactForm processes contact form submissions with validation
-func (s *Server) handleContactForm(w http.ResponseWriter, r *http.Request) {
-	// Parse form with size limit
-	r.Body = http.MaxBytesReader(w, r.Body, 32<<10) // 32KB limit
-
-	if err := r.ParseForm(); err != nil {
-		s.logger.Warn("form parse error", "error", err, "ip", r.RemoteAddr)
-		http.Error(w, "Form data too large or invalid", http.StatusBadRequest)
-		return
-	}
-
-	// Extract and validate form data
-	formData := ContactFormData{
-		Name:    r.FormValue("name"),
-		Email:   r.FormValue("email"),
-		Message: r.FormValue("message"),
-	}
-
-	if validationErrors := s.validateContactForm(formData); len(validationErrors) > 0 {
-		s.logger.Info("form validation failed",
-			"errors", validationErrors,
-			"ip", r.RemoteAddr,
-		)
-		// In a real app, you'd pass these errors back to the form
-		http.Error(w, "Please check your form data", http.StatusBadRequest)
-		return
-	}
-
-	// Log successful submission (replace with email/database logic)
-	s.logger.Info("contact form submission",
-		"name", formData.Name,
-		"email", formData.Email,
-		"message_length", len(formData.Message),
-		"ip", r.RemoteAddr,
-	)
-
-	// TODO: Send email or save to database here
-
-	http.Redirect(w, r, "/contact?success=true", http.StatusSeeOther)
 }
 
 // handleHealth provides a comprehensive health check

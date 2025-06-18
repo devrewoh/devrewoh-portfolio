@@ -1,6 +1,7 @@
 package main
 
-// BaseLayout provides the HTML structure for all pages
+import "strings"
+
 templ BaseLayout(title, description string) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -24,7 +25,6 @@ templ BaseLayout(title, description string) {
 	</html>
 }
 
-// Header component with navigation
 templ Header() {
 	<header class="header">
 		<nav class="nav">
@@ -40,7 +40,6 @@ templ Header() {
 	</header>
 }
 
-// Footer component
 templ Footer() {
 	<footer class="footer">
 		<div class="footer-content">
@@ -49,7 +48,6 @@ templ Footer() {
 	</footer>
 }
 
-// Card component for reusable content blocks
 templ Card(title, content string, extraClass string) {
 	<div class={ "card", extraClass }>
 		if title != "" {
@@ -61,16 +59,18 @@ templ Card(title, content string, extraClass string) {
 	</div>
 }
 
-// Button component
 templ Button(text, href, buttonType string) {
 	if href != "" {
-		<a href={ templ.URL(href) } class={ "btn", "btn-" + buttonType }>{ text }</a>
+		if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+			<a href={ templ.URL(href) } class={ "btn", "btn-" + buttonType } target="_blank" rel="noopener noreferrer">{ text }</a>
+		} else {
+			<a href={ templ.URL(href) } class={ "btn", "btn-" + buttonType }>{ text }</a>
+		}
 	} else {
 		<button class={ "btn", "btn-" + buttonType } type="submit">{ text }</button>
 	}
 }
 
-// HomePage component
 templ HomePage(name, tagline string) {
 	@BaseLayout("Home – Backend-Focused Go Developer", "Personal site of a Go developer building scalable backend systems with clarity and care.") {
 		<section class="hero">
@@ -83,7 +83,7 @@ templ HomePage(name, tagline string) {
 					Along the way, I’ve studied cybersecurity and backend development, and I’m now focused on building secure, reliable software—especially with Go.
 				</p>
 				<div class="hero-actions">
-					@Button("View My Work", "/about", "primary")
+					@Button("View My GitHub", "https://github.com/devrewoh", "primary")
 					@Button("Get In Touch", "/contact", "secondary")
 				</div>
 			</div>
@@ -115,7 +115,6 @@ templ HomePage(name, tagline string) {
 	}
 }
 
-// ProjectCard component for project showcase
 templ ProjectCard(title, description, technologies string) {
 	<div class="project-card">
 		<h3 class="project-title">{ title }</h3>
@@ -127,13 +126,12 @@ templ ProjectCard(title, description, technologies string) {
 	</div>
 }
 
-// AboutPage component
 templ AboutPage() {
 	@BaseLayout("About - Backend-Focused Go Developer", "Learn more about my journey as a Go developer and my passion for clean, efficient code") {
 		<section class="about-hero">
 			<div class="container">
 				<h1 class="page-title">About Me</h1>
-				<p class="page-subtitle">Passionate about Go and building scalable systems</p>
+				<p class="page-subtitle">Passionate about building scalable systems</p>
 			</div>
 		</section>
 
@@ -143,37 +141,43 @@ templ AboutPage() {
 			<div class="about-text">
 				<h2>My Journey</h2>
 				<p>
-					I’ve been passionate about computers since my 13th birthday, when I was gifted an old PC from a family friend—it was the only thing I asked for that year. It opened up a whole new world beyond my neighborhood. I fell in love with competitive gaming and entered my first tournament at 14.
+					I’ve been passionate about computers ever since my 13th birthday, when all I wanted was an old hand-me-down PC from a family friend. That one gift opened the door to a whole new world beyond my neighborhood.
 				</p>
 				<p>
-					By high school, I had replaced all traditional electives with computer programming at the Erie County Technical School, learning BASIC, Visual Basic, HTML, CSS, JavaScript, and C#. Our group of friends hosted LAN parties in garages, troubleshooting networking conflicts with switches and routers ourselves.
+					By high school, I had replaced traditional electives with computer programming courses at Erie County Technical School. I started with BASIC, then picked up Visual Basic, HTML, CSS, JavaScript, and finally C#. My friends and I spent weekends hosting LAN parties in garages, learning to troubleshoot networking issues and configure switches and routers ourselves.				</p>
+				<p>
+					Later, I joined the U.S. Navy, where I received hands-on training in electronics theory and worked on everything from radar-jamming systems to analog and digital avionics, down to the component level. I learned to read schematics, use signal generators and oscilloscopes, and think in binary, octal, hexadecimal, and logic gates. I supported legacy systems written in COBOL and maintained modern test benches built with C++.				</p>
+				<p>
+					My time in the Navy was one of the most meaningful chapters of my life. But after several deployments, I found myself wanting a path that felt more connected to everyday life. I tried roles in sales and financial services, but I kept coming back to my first love: computers. For a while, I hesitated to make it a career because I didn’t want to lose the joy it gave me. But eventually I realized that building software can be just as fulfilling as anything I had ever done.				</p>
+				<p>
+					Programming continues to challenge and inspire me. It rewards curiosity, discipline, and persistence. There’s always something new to explore, and each project brings an opportunity to grow. That’s what keeps me coming back—it's a lifelong craft I’m proud to be part of.				</p>
+
+				<h2>Areas of Focus</h2>
+				<p>
+					As a father to an amazing little girl, I care deeply about the future—both in the world we build and the people we build it for. My work is guided by curiosity, intention, and a long-term mindset.
 				</p>
 				<p>
-					Eventually, I joined the U.S. Navy, where I was trained in electronics theory and worked on systems ranging from radar-jamming weaponry to analog and digital avionics—down to the component level. I learned to read schematics, work with signal generators, oscillators, binary, octal, hexadecimal, and logic gates. I supported legacy systems written in COBOL and maintained modern test benches written in C++.
+					I'm drawn to the full spectrum of computing, from hardware-level problem solving and reverse engineering to software architecture, backend systems, and network performance. I have a strong interest in cybersecurity, developer experience, and the overlap between clean code and real-world reliability.
 				</p>
 				<p>
-					My time in the Navy remains one of the highlights of my life, but after multiple deployments, I began seeking something less isolating. I explored roles in sales and financial services, but I kept returning to my passion for computers. At first, I hesitated to pursue it professionally—I didn’t want to lose the joy computers brought me—but over time, I realized that building software can be just as thrilling and meaningful as any championship I had once dreamed of winning.
-				</p>
-				<p>
-					Programming has been both challenging and incredibly rewarding. Like competitive gaming, it’s a pursuit of mastery. Both demand focus, discipline, and consistency. If you don’t use it, you lose it. That’s part of what makes it beautiful.
+				    Outside of technical systems, I’m passionate about education, mentorship, and helping businesses grow with technology that’s thoughtful and sustainable. Whether it’s a small CLI tool or a platform used by thousands, I want the things I build to stand the test of time.
 				</p>
 
-				<h2>Building for the Future</h2>
+				<h2>My Learning Strategy</h2>
 				<p>
-					As a father to an amazing little girl, I care deeply about youth, education, and planting seeds that will grow into shade for future generations.
-					Whether I’m building systems, products, or relationships—I believe in doing so with care, intention, and a long-term mindset.
+					I’m mostly self-taught, but not without guidance. I’ve taken instructor-led cybersecurity courses, studied core CS concepts independently, and earned certifications like A+, Security+, Splunk, and CEH. Along the way, I’ve learned to revisit the fundamentals often—drawing boundaries between what’s essential, what’s novel, and what’s just noise.
 				</p>
 				<p>
-					My interests span everything from software architecture and backend systems to cybersecurity and performance tuning. I’m also passionate about entrepreneurship and the human side of technology—how people interact with what we build, and how we can create lasting value.
-				</p>
-
-				<h2>How I Learn</h2>
+                	Go and Python are my primary tools for learning and building. I chose Go because I prefer compiled languages with strict rules that catch errors early. Its simplicity, powerful standard library, and seamless toolchain make it an ideal choice for developing reliable backend systems with confidence. The built-in testing framework and vibrant community are added bonuses.
+                </p>
 				<p>
-					I’m mostly self-taught, but not without guidance. I’ve taken instructor-led cybersecurity courses, studied core CS concepts independently, and completed certifications like A+, Security+, Splunk, and CEH.
-					I enjoy revisiting the fundamentals and drawing clear boundaries between what’s essential, what’s novel, and what’s noise.
-				</p>
+                	Python, on the other hand, is undeniably relevant in today’s ecosystem. Its mature libraries and wide applicability—from scripting to machine learning—make it a perfect complement to Go, especially for exploring different layers of the software stack.
+                </p>
 				<p>
-					These are some of the best learning platforms or guided tutorials that have shaped my learning and development:
+                	Boot.dev deserves special credit for helping a few lightbulb moments click into place for me. While I’m not entirely self-taught, I’ve had to curate many of my own learning resources and build a structured path forward. I’m also experimenting with AI tools—cautiously and intentionally—as they’ve significantly boosted my productivity, though I aim to remain grounded in first-principles understanding.
+                </p>
+				<p>
+					Here are a few of my favorite learning resources that have shaped how I learn and build:
 				</p>
 				<ul class="learning-platforms">
 					<li><a href="https://www.boot.dev/" target="_blank" rel="noopener">Boot.dev</a></li>
@@ -202,7 +206,6 @@ templ AboutPage() {
 	}
 }
 
-// ValueCard component
 templ ValueCard(title, description string) {
 	<div class="value-card">
 		<h3 class="value-title">{ title }</h3>
@@ -210,13 +213,12 @@ templ ValueCard(title, description string) {
 	</div>
 }
 
-// ContactPage component
 templ ContactPage() {
-	@BaseLayout("Contact - Backend-Focused Go Developer", "Get in touch to discuss Go development opportunities and collaborations") {
+	@BaseLayout("Contact - Backend-Focused Go Developer", "Reach out to collaborate on Go projects or share ideas in backend development") {
 		<section class="contact-hero">
 			<div class="container">
 				<h1 class="page-title">Get In Touch</h1>
-				<p class="page-subtitle">Let's discuss Go development opportunities</p>
+				<p class="page-subtitle">Open to collaboration, learning, and problem-solving</p>
 			</div>
 		</section>
 
@@ -224,10 +226,10 @@ templ ContactPage() {
 			<div class="container">
 				<div class="contact-grid">
 					<div class="contact-info">
-						<h2>Let's Connect</h2>
+						<h2>Start a Conversation</h2>
 						<p>
-							I’m always looking to learn from others in tech, whether you're working in backend, DevOps, or just enjoy solving interesting problems.
-							I’d love to hear what you’re building.
+							Whether you're building something exciting in backend or just love solving complex problems, I'd love to hear from you.
+							I’m always open to exchanging ideas or exploring new opportunities in tech.
 						</p>
 						<div class="contact-methods">
 							@ContactMethod("Email", "devrewoh@proton.me", "mailto:devrewoh@proton.me")
@@ -235,18 +237,12 @@ templ ContactPage() {
 							@ContactMethod("GitHub", "View my repositories", "https://github.com/devrewoh")
 						</div>
 					</div>
-					/*
-					<div class="contact-form-container">
-						@ContactForm()
-					</div>
-					*/
 				</div>
 			</div>
 		</section>
 	}
 }
 
-// ContactMethod component
 templ ContactMethod(label, text, href string) {
 	<div class="contact-method">
 		<strong class="contact-label">{ label }:</strong>
@@ -254,7 +250,6 @@ templ ContactMethod(label, text, href string) {
 	</div>
 }
 
-// NotFoundPage component for 404 errors
 templ NotFoundPage() {
 	@BaseLayout("Page Not Found", "The page you're looking for doesn't exist") {
 		<section class="error-page">

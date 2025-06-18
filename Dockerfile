@@ -1,8 +1,8 @@
 # Build stage
 FROM golang:1.24-alpine AS builder
 
-# Install dependencies
-RUN apk add --no-cache git
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
 
 WORKDIR /app
 
@@ -10,37 +10,43 @@ WORKDIR /app
 RUN go install github.com/a-h/templ/cmd/templ@latest && \
     go install github.com/magefile/mage@latest
 
-# Copy go mod files first for better caching
+# Copy dependency files first for better Docker layer caching
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod download && go mod verify
 
 # Copy source code
 COPY . .
 
-# Build for production
-RUN mage BuildProd
+# Generate templates and build for production
+RUN mage Generate && mage BuildProd
+
+# Verify the binary was created
+RUN ls -la bin/ && test -f bin/devrewoh-portfolio
 
 # Runtime stage
 FROM alpine:latest
 
-# Install runtime dependencies
-RUN apk --no-cache add ca-certificates tzdata && \
+# Install runtime dependencies and create user in one layer
+RUN apk --no-cache add ca-certificates tzdata wget && \
     addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
+    adduser -u 1001 -S appuser -G appgroup && \
+    mkdir -p /app/static
 
 WORKDIR /app
 
-# Copy binary and static files
-COPY --from=builder /app/bin/devrewoh-portfolio .
-COPY --from=builder /app/static ./static
+# Copy binary and static files with proper ownership
+COPY --from=builder --chown=appuser:appgroup /app/bin/devrewoh-portfolio ./
+COPY --from=builder --chown=appuser:appgroup /app/static ./static/
 
-# Set ownership and switch to non-root user
-RUN chown -R appuser:appgroup /app
+# Switch to non-root user
 USER appuser
 
 # Configure container
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+
+# Health check (using wget since it's already installed)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
+# Use exec form for proper signal handling
 CMD ["./devrewoh-portfolio"]

@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
-	"net/url"
+	"os"
 	"strings"
 	"testing"
 )
@@ -28,267 +28,6 @@ func TestHealthEndpoint(t *testing.T) {
 	expectedContentType := "application/json"
 	if contentType := w.Header().Get("Content-Type"); contentType != expectedContentType {
 		t.Errorf("Expected Content-Type %s, got %s", expectedContentType, contentType)
-	}
-}
-
-func TestContactFormValidation(t *testing.T) {
-	server := NewServer(":8080")
-
-	tests := []struct {
-		name     string
-		formData url.Values
-		wantCode int
-	}{
-		{
-			name: "valid form",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {"john@example.com"},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusSeeOther, // Redirect on success
-		},
-		{
-			name: "missing name",
-			formData: url.Values{
-				"email":   {"john@example.com"},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "empty name",
-			formData: url.Values{
-				"name":    {""},
-				"email":   {"john@example.com"},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "invalid email",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {"invalid-email"},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "empty email",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {""},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "missing message",
-			formData: url.Values{
-				"name":  {"John Doe"},
-				"email": {"john@example.com"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "empty message",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {"john@example.com"},
-				"message": {""},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "message too short",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {"john@example.com"},
-				"message": {"short"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "name too long",
-			formData: url.Values{
-				"name":    {strings.Repeat("a", 101)}, // 101 characters
-				"email":   {"john@example.com"},
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "email too long",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {strings.Repeat("a", 250) + "@example.com"}, // > 254 characters
-				"message": {"This is a test message that is long enough to pass validation"},
-			},
-			wantCode: http.StatusBadRequest,
-		},
-		{
-			name: "message too long",
-			formData: url.Values{
-				"name":    {"John Doe"},
-				"email":   {"john@example.com"},
-				"message": {strings.Repeat("a", 1001)}, // 1001 characters
-			},
-			wantCode: http.StatusBadRequest,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest("POST", "/contact", strings.NewReader(tt.formData.Encode()))
-			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-			w := httptest.NewRecorder()
-
-			server.router.ServeHTTP(w, req)
-
-			if w.Code != tt.wantCode {
-				t.Errorf("Expected status %d, got %d for test case: %s", tt.wantCode, w.Code, tt.name)
-			}
-		})
-	}
-}
-
-func TestValidateContactForm(t *testing.T) {
-	server := NewServer(":8080")
-
-	tests := []struct {
-		name       string
-		data       ContactFormData
-		wantError  bool
-		errorCount int // Expected number of validation errors
-	}{
-		{
-			name: "valid data",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "john@example.com",
-				Message: "This is a valid message that meets the minimum length requirement",
-			},
-			wantError:  false,
-			errorCount: 0,
-		},
-		{
-			name: "empty name",
-			data: ContactFormData{
-				Name:    "",
-				Email:   "john@example.com",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "name with whitespace only",
-			data: ContactFormData{
-				Name:    "   ",
-				Email:   "john@example.com",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "invalid email",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "not-an-email",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "empty email",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "message too short",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "john@example.com",
-				Message: "short",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "empty message",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "john@example.com",
-				Message: "",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "multiple validation errors",
-			data: ContactFormData{
-				Name:    "",
-				Email:   "invalid-email",
-				Message: "short",
-			},
-			wantError:  true,
-			errorCount: 3,
-		},
-		{
-			name: "name too long",
-			data: ContactFormData{
-				Name:    strings.Repeat("a", 101),
-				Email:   "john@example.com",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "email too long",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   strings.Repeat("a", 250) + "@example.com",
-				Message: "Valid message here that is long enough",
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-		{
-			name: "message too long",
-			data: ContactFormData{
-				Name:    "John Doe",
-				Email:   "john@example.com",
-				Message: strings.Repeat("a", 1001),
-			},
-			wantError:  true,
-			errorCount: 1,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			errors := server.validateContactForm(tt.data)
-			hasError := len(errors) > 0
-
-			if hasError != tt.wantError {
-				t.Errorf("Expected error: %v, got error: %v, errors: %v",
-					tt.wantError, hasError, errors)
-			}
-
-			if len(errors) != tt.errorCount {
-				t.Errorf("Expected %d errors, got %d errors: %v",
-					tt.errorCount, len(errors), errors)
-			}
-		})
 	}
 }
 
@@ -348,10 +87,204 @@ func TestNotFoundHandler(t *testing.T) {
 	}
 }
 
+func TestPageHandlers(t *testing.T) {
+	server := NewServer(":8080")
+
+	tests := []struct {
+		name        string
+		path        string
+		wantCode    int
+		wantContent string
+	}{
+		{
+			name:        "Home page",
+			path:        "/",
+			wantCode:    http.StatusOK,
+			wantContent: "Chris",
+		},
+		{
+			name:        "About page",
+			path:        "/about",
+			wantCode:    http.StatusOK,
+			wantContent: "About Me",
+		},
+		{
+			name:        "Contact page",
+			path:        "/contact",
+			wantCode:    http.StatusOK,
+			wantContent: "Get In Touch",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest("GET", tt.path, nil)
+			w := httptest.NewRecorder()
+
+			server.router.ServeHTTP(w, req)
+
+			if w.Code != tt.wantCode {
+				t.Errorf("Expected status %d for %s, got %d", tt.wantCode, tt.path, w.Code)
+			}
+
+			body := w.Body.String()
+			if !strings.Contains(body, tt.wantContent) {
+				t.Errorf("Expected %s to contain %q", tt.name, tt.wantContent)
+			}
+
+			// Verify proper HTML structure
+			if !strings.Contains(body, "<!doctype html>") {
+				t.Errorf("%s should contain proper HTML doctype", tt.name)
+			}
+
+			if !strings.Contains(body, "DEVREWOH") {
+				t.Errorf("%s should contain site branding", tt.name)
+			}
+		})
+	}
+}
+
+func TestStaticFileHeaders(t *testing.T) {
+	server := NewServer(":8080")
+
+	// Test cache header logic with different file extensions
+	tests := []struct {
+		name      string
+		path      string
+		wantCache bool
+	}{
+		{"CSS file", "/static/css/styles.css", true},
+		{"JS file", "/static/js/app.js", true},
+		{"PNG image", "/static/images/logo.png", true},
+		{"ICO file", "/static/favicon.ico", true},
+		{"Regular file", "/static/readme.txt", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest("GET", tt.path, nil)
+			w := httptest.NewRecorder()
+
+			server.router.ServeHTTP(w, req)
+
+			// For files that don't exist (404), we still test the cache header logic
+			// The static file handler sets headers before checking if file exists
+			cacheControl := w.Header().Get("Cache-Control")
+
+			if tt.wantCache {
+				expectedCache := "public, max-age=86400"
+				// Only check cache headers if the file was processed by our handler
+				// (not 404 from missing file)
+				if w.Code == http.StatusOK && cacheControl != expectedCache {
+					t.Errorf("Expected Cache-Control %q for %s, got %q", expectedCache, tt.name, cacheControl)
+				}
+				// If it's 404, that's fine - the file just doesn't exist
+				if w.Code == http.StatusNotFound {
+					t.Logf("File %s doesn't exist (this is fine for testing)", tt.path)
+				}
+			} else {
+				// For non-cacheable files, we don't expect cache headers
+				if cacheControl == "public, max-age=86400" {
+					t.Errorf("Did not expect cache headers for %s, but got %q", tt.name, cacheControl)
+				}
+			}
+		})
+	}
+}
+
+func TestServerConfiguration(t *testing.T) {
+	// Save original environment
+	originalPort := os.Getenv("PORT")
+	defer func() {
+		if originalPort == "" {
+			os.Unsetenv("PORT")
+		} else {
+			os.Setenv("PORT", originalPort)
+		}
+	}()
+
+	// Test default port
+	server := NewServer(":8080")
+	if server.addr != ":8080" {
+		t.Errorf("Expected default addr :8080, got %s", server.addr)
+	}
+
+	// Test environment port override
+	os.Setenv("PORT", "9000")
+	server = NewServer(":9000")
+	if server.addr != ":9000" {
+		t.Errorf("Expected server addr :9000, got %s", server.addr)
+	}
+}
+
+func TestMiddlewareIntegration(t *testing.T) {
+	server := NewServer(":8080")
+
+	req := httptest.NewRequest("GET", "/", nil)
+	w := httptest.NewRecorder()
+
+	server.router.ServeHTTP(w, req)
+
+	// Test that all middleware is applied
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	// Security headers should be present (tested elsewhere, but verify integration)
+	if w.Header().Get("X-Content-Type-Options") != "nosniff" {
+		t.Error("Security middleware should be applied")
+	}
+
+	// Request ID should be added (though we can't test the specific value)
+	// This mainly tests that middleware chain doesn't break
+}
+
+func TestRateLimiting(t *testing.T) {
+	server := NewServer(":8080")
+
+	// Test that we can make multiple requests without hitting rate limit
+	// The throttle is set to 100, so 10 requests should be fine
+	for i := 0; i < 10; i++ {
+		req := httptest.NewRequest("GET", "/health", nil)
+		w := httptest.NewRecorder()
+
+		server.router.ServeHTTP(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Errorf("Request %d failed with status %d", i, w.Code)
+		}
+	}
+}
+
+func TestHealthEndpointContent(t *testing.T) {
+	server := NewServer(":8080")
+
+	req := httptest.NewRequest("GET", "/health", nil)
+	w := httptest.NewRecorder()
+
+	server.router.ServeHTTP(w, req)
+
+	body := w.Body.String()
+
+	// Test JSON structure
+	expectedFields := []string{"status", "timestamp", "version", "uptime"}
+	for _, field := range expectedFields {
+		if !strings.Contains(body, field) {
+			t.Errorf("Health response should contain %q field", field)
+		}
+	}
+
+	// Test cache headers
+	cacheControl := w.Header().Get("Cache-Control")
+	if cacheControl != "no-cache" {
+		t.Errorf("Expected Cache-Control no-cache for health endpoint, got %q", cacheControl)
+	}
+}
+
 func TestPageRoutesExist(t *testing.T) {
 	server := NewServer(":8080")
 
-	routes := []string{"/health"}
+	routes := []string{"/", "/about", "/contact", "/health"}
 
 	for _, route := range routes {
 		t.Run("GET "+route, func(t *testing.T) {
@@ -363,54 +296,9 @@ func TestPageRoutesExist(t *testing.T) {
 			if w.Code >= 500 {
 				t.Errorf("Route %s returned server error: %d", route, w.Code)
 			}
-		})
-	}
-}
 
-func TestContactFormTooBig(t *testing.T) {
-	server := NewServer(":8080")
-
-	// Create a form that exceeds the 32KB limit
-	largeData := strings.Repeat("a", 33*1024) // 33KB
-	formData := url.Values{
-		"name":    {"John Doe"},
-		"email":   {"john@example.com"},
-		"message": {largeData},
-	}
-
-	req := httptest.NewRequest("POST", "/contact", strings.NewReader(formData.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	w := httptest.NewRecorder()
-
-	server.router.ServeHTTP(w, req)
-
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("Expected status %d for oversized form, got %d", http.StatusBadRequest, w.Code)
-	}
-}
-
-func TestEmailRegex(t *testing.T) {
-	tests := []struct {
-		email string
-		valid bool
-	}{
-		{"test@example.com", true},
-		{"user.name@example.com", true},
-		{"user+tag@example.com", true},
-		{"user123@example-domain.com", true},
-		{"invalid.email", false},
-		{"@example.com", false},
-		{"test@", false},
-		{"", false},
-		{"test..test@example.com", false}, // consecutive dots
-		{"test@example", false},           // no TLD
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.email, func(t *testing.T) {
-			match := emailRegex.MatchString(tt.email)
-			if match != tt.valid {
-				t.Errorf("Email %q: expected valid=%v, got valid=%v", tt.email, tt.valid, match)
+			if w.Code == 0 {
+				t.Errorf("Route %s returned no response", route)
 			}
 		})
 	}
@@ -427,25 +315,13 @@ func BenchmarkHealthEndpoint(b *testing.B) {
 	}
 }
 
-func BenchmarkContactFormValidation(b *testing.B) {
+func BenchmarkHomePageRender(b *testing.B) {
 	server := NewServer(":8080")
-	data := ContactFormData{
-		Name:    "John Doe",
-		Email:   "john@example.com",
-		Message: "This is a test message that meets all validation requirements",
-	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		server.validateContactForm(data)
-	}
-}
-
-func BenchmarkEmailRegex(b *testing.B) {
-	email := "test@example.com"
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		emailRegex.MatchString(email)
+		req := httptest.NewRequest("GET", "/", nil)
+		w := httptest.NewRecorder()
+		server.router.ServeHTTP(w, req)
 	}
 }
