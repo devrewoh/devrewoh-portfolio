@@ -1,0 +1,64 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# Binary output path
+bin = "./tmp/devrewoh-portfolio"
+
+# Build command - this is the key fix
+cmd = "templ generate && go build -o ./tmp/devrewoh-portfolio ."
+
+# Directory to watch for changes
+dir = "."
+
+# Delay before rebuilding (ms)
+delay = 1000
+
+# Directories to exclude from watching
+exclude_dir = ["tmp", "bin", "static", ".git", "node_modules"]
+
+# File patterns to exclude
+exclude_regex = ["_test\\.go$", "_templ\\.go$"]
+
+# File extensions to watch
+include_ext = ["go", "templ", "css", "js", "html"]
+
+# Exclude unchanged files
+exclude_unchanged = true
+
+# Follow symbolic links
+follow_symlink = true
+
+# Enable polling instead of file system events (useful on some systems)
+poll = false
+
+# Polling interval (ms) - only used if poll = true
+poll_interval = 500
+
+# Grace period for process termination
+kill_delay = "500ms"
+
+# Send interrupt signal instead of kill
+send_interrupt = true
+
+# Stop runner when build fails
+stop_on_root = true
+
+[color]
+# Colors for different types of output
+app = ""
+build = "yellow"
+main = "magenta"
+runner = "green"
+watcher = "cyan"
+
+[log]
+# Show time in logs
+time = false
+
+# Show logs from the main process
+main_only = false
+
+[misc]
+# Clean tmp directory on exit
+clean_on_exit = true

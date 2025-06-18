@@ -1,0 +1,276 @@
+package main
+
+// BaseLayout provides the HTML structure for all pages
+templ BaseLayout(title, description string) {
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="description" content={ description }/>
+		<title>{ title }</title>
+		<link rel="stylesheet" href="/static/css/styles.css"/>
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+	</head>
+	<body>
+		@Header()
+		<main class="main">
+			{ children... }
+		</main>
+		@Footer()
+	</body>
+	</html>
+}
+
+// Header component with navigation
+templ Header() {
+	<header class="header">
+		<nav class="nav">
+			<div class="nav-brand">
+				<a href="/" class="nav-logo">DEVREWOH</a>
+			</div>
+			<div class="nav-menu">
+				<a href="/" class="nav-link">Home</a>
+				<a href="/about" class="nav-link">About</a>
+				<a href="/contact" class="nav-link">Contact</a>
+			</div>
+		</nav>
+	</header>
+}
+
+// Footer component
+templ Footer() {
+	<footer class="footer">
+		<div class="footer-content">
+			<p>&copy; 2025 Devrewoh. Built with Go, Templ, and ❤️</p>
+		</div>
+	</footer>
+}
+
+// Card component for reusable content blocks
+templ Card(title, content string, extraClass string) {
+	<div class={ "card", extraClass }>
+		if title != "" {
+			<h3 class="card-title">{ title }</h3>
+		}
+		<div class="card-content">
+			{ content }
+		</div>
+	</div>
+}
+
+// Button component
+templ Button(text, href, buttonType string) {
+	if href != "" {
+		<a href={ templ.URL(href) } class={ "btn", "btn-" + buttonType }>{ text }</a>
+	} else {
+		<button class={ "btn", "btn-" + buttonType } type="submit">{ text }</button>
+	}
+}
+
+// HomePage component
+templ HomePage(name, tagline string) {
+	@BaseLayout("Home – Backend-Focused Go Developer", "Personal site of a Go developer building scalable backend systems with clarity and care.") {
+		<section class="hero">
+			<div class="hero-content">
+				<h1 class="hero-title">Hi, I'm <span class="hero-name">{ name }</span></h1>
+				<p class="hero-tagline">{ tagline }</p>
+				<p class="hero-description">
+					I’ve been obsessed with computers since childhood—from building PCs to repairing radar systems in the Navy.
+					My path has taken me through the military, finance, and IT support, always centered around problem-solving.
+					Along the way, I’ve studied cybersecurity and backend development, and I’m now focused on building secure, reliable software—especially with Go.
+				</p>
+				<div class="hero-actions">
+					@Button("View My Work", "/about", "primary")
+					@Button("Get In Touch", "/contact", "secondary")
+				</div>
+			</div>
+		</section>
+
+		<section class="skills">
+			<div class="container">
+				<h2 class="section-title">Technical Skills</h2>
+				<div class="skills-grid">
+					@Card("Backend Development", "Learning to build robust APIs and services in Go, with a focus on clean code and simplicity.", "")
+					@Card("Data-Driven Design", "Exploring how data flows through systems, including modeling, transformations, and building APIs with structure and clarity.", "")
+					@Card("Database Fundamentals", "Working with PostgreSQL and SQL to design practical schemas and write effective queries.", "")
+					@Card("Testing & Quality", "Practicing unit testing and learning CI/CD principles to build more reliable software.", "")
+					@Card("Cloud & DevOps Basics", "Exploring deployment workflows using Docker and beginner AWS projects.", "")
+				</div>
+			</div>
+		</section>
+
+		<section class="recent-work">
+			<div class="container">
+				<h2 class="section-title">Recent Projects</h2>
+				<div class="projects-grid">
+					@ProjectCard("Newsletter Analytics Platform (In Progress)", "A personal project aimed at helping creators analyze newsletter performance. Currently building the MVP using Go and minimal UI to focus on insights that matter.", "Go, Chi, sqlc, SQLite, templ, Charts.js, Stripe")
+					@ProjectCard("BookBot", "A command-line Python tool that analyzes plain-text books to report word and character frequency", "Python, File I/O, String Processing")
+					@ProjectCard("TBD", "Exciting new project currently in development. Stay tuned!", "")
+				</div>
+			</div>
+		</section>
+	}
+}
+
+// ProjectCard component for project showcase
+templ ProjectCard(title, description, technologies string) {
+	<div class="project-card">
+		<h3 class="project-title">{ title }</h3>
+		<p class="project-description">{ description }</p>
+		<div class="project-tech">
+			<span class="tech-label">Technologies:</span>
+			<span class="tech-list">{ technologies }</span>
+		</div>
+	</div>
+}
+
+// AboutPage component
+templ AboutPage() {
+	@BaseLayout("About - Backend-Focused Go Developer", "Learn more about my journey as a Go developer and my passion for clean, efficient code") {
+		<section class="about-hero">
+			<div class="container">
+				<h1 class="page-title">About Me</h1>
+				<p class="page-subtitle">Passionate about Go and building scalable systems</p>
+			</div>
+		</section>
+
+<section class="about-content">
+	<div class="container">
+		<div class="about-grid">
+			<div class="about-text">
+				<h2>My Journey</h2>
+				<p>
+					I’ve been passionate about computers since my 13th birthday, when I was gifted an old PC from a family friend—it was the only thing I asked for that year. It opened up a whole new world beyond my neighborhood. I fell in love with competitive gaming and entered my first tournament at 14.
+				</p>
+				<p>
+					By high school, I had replaced all traditional electives with computer programming at the Erie County Technical School, learning BASIC, Visual Basic, HTML, CSS, JavaScript, and C#. Our group of friends hosted LAN parties in garages, troubleshooting networking conflicts with switches and routers ourselves.
+				</p>
+				<p>
+					Eventually, I joined the U.S. Navy, where I was trained in electronics theory and worked on systems ranging from radar-jamming weaponry to analog and digital avionics—down to the component level. I learned to read schematics, work with signal generators, oscillators, binary, octal, hexadecimal, and logic gates. I supported legacy systems written in COBOL and maintained modern test benches written in C++.
+				</p>
+				<p>
+					My time in the Navy remains one of the highlights of my life, but after multiple deployments, I began seeking something less isolating. I explored roles in sales and financial services, but I kept returning to my passion for computers. At first, I hesitated to pursue it professionally—I didn’t want to lose the joy computers brought me—but over time, I realized that building software can be just as thrilling and meaningful as any championship I had once dreamed of winning.
+				</p>
+				<p>
+					Programming has been both challenging and incredibly rewarding. Like competitive gaming, it’s a pursuit of mastery. Both demand focus, discipline, and consistency. If you don’t use it, you lose it. That’s part of what makes it beautiful.
+				</p>
+
+				<h2>Building for the Future</h2>
+				<p>
+					As a father to an amazing little girl, I care deeply about youth, education, and planting seeds that will grow into shade for future generations.
+					Whether I’m building systems, products, or relationships—I believe in doing so with care, intention, and a long-term mindset.
+				</p>
+				<p>
+					My interests span everything from software architecture and backend systems to cybersecurity and performance tuning. I’m also passionate about entrepreneurship and the human side of technology—how people interact with what we build, and how we can create lasting value.
+				</p>
+
+				<h2>How I Learn</h2>
+				<p>
+					I’m mostly self-taught, but not without guidance. I’ve taken instructor-led cybersecurity courses, studied core CS concepts independently, and completed certifications like A+, Security+, Splunk, and CEH.
+					I enjoy revisiting the fundamentals and drawing clear boundaries between what’s essential, what’s novel, and what’s noise.
+				</p>
+				<p>
+					These are some of the best learning platforms or guided tutorials that have shaped my learning and development:
+				</p>
+				<ul class="learning-platforms">
+					<li><a href="https://www.boot.dev/" target="_blank" rel="noopener">Boot.dev</a></li>
+					<li><a href="https://threedots.tech/" target="_blank" rel="noopener">three dots labs</a></li>
+					<li><a href="https://www.ardanlabs.com/" target="_blank" rel="noopener">Ardan Labs</a></li>
+					<li><a href="https://github.com/quii/learn-go-with-tests" target="_blank" rel="noopener">Learn Go With Tests</a></li>
+					<li><a href="https://lets-go.alexedwards.net/" target="_blank" rel="noopener">Let's Go by Alex Edwards</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+		<section class="values">
+			<div class="container">
+				<h2 class="section-title">Core Values</h2>
+				<div class="values-grid">
+					@ValueCard("Clean Code", "Writing code that is readable, maintainable, and follows Go idioms and best practices.")
+					@ValueCard("Performance", "Optimizing for efficiency and scalability while maintaining code clarity and simplicity.")
+					@ValueCard("Continuous Learning", "Staying updated with Go ecosystem developments and contributing to the community.")
+					@ValueCard("Collaboration", "Working effectively in teams and sharing knowledge through code reviews and mentoring.")
+				</div>
+			</div>
+		</section>
+	}
+}
+
+// ValueCard component
+templ ValueCard(title, description string) {
+	<div class="value-card">
+		<h3 class="value-title">{ title }</h3>
+		<p class="value-description">{ description }</p>
+	</div>
+}
+
+// ContactPage component
+templ ContactPage() {
+	@BaseLayout("Contact - Backend-Focused Go Developer", "Get in touch to discuss Go development opportunities and collaborations") {
+		<section class="contact-hero">
+			<div class="container">
+				<h1 class="page-title">Get In Touch</h1>
+				<p class="page-subtitle">Let's discuss Go development opportunities</p>
+			</div>
+		</section>
+
+		<section class="contact-content">
+			<div class="container">
+				<div class="contact-grid">
+					<div class="contact-info">
+						<h2>Let's Connect</h2>
+						<p>
+							I’m always looking to learn from others in tech, whether you're working in backend, DevOps, or just enjoy solving interesting problems.
+							I’d love to hear what you’re building.
+						</p>
+						<div class="contact-methods">
+							@ContactMethod("Email", "devrewoh@proton.me", "mailto:devrewoh@proton.me")
+							@ContactMethod("LinkedIn", "Connect with me", "https://www.linkedin.com/in/christopherrhower/")
+							@ContactMethod("GitHub", "View my repositories", "https://github.com/devrewoh")
+						</div>
+					</div>
+					/*
+					<div class="contact-form-container">
+						@ContactForm()
+					</div>
+					*/
+				</div>
+			</div>
+		</section>
+	}
+}
+
+// ContactMethod component
+templ ContactMethod(label, text, href string) {
+	<div class="contact-method">
+		<strong class="contact-label">{ label }:</strong>
+		<a href={ templ.URL(href) } class="contact-link">{ text }</a>
+	</div>
+}
+
+// NotFoundPage component for 404 errors
+templ NotFoundPage() {
+	@BaseLayout("Page Not Found", "The page you're looking for doesn't exist") {
+		<section class="error-page">
+			<div class="container">
+				<div class="error-content">
+					<h1 class="error-title">404</h1>
+					<h2 class="error-subtitle">Page Not Found</h2>
+					<p class="error-description">
+						The page you're looking for doesn't exist or has been moved.
+					</p>
+					<div class="error-actions">
+						@Button("Go Home", "/", "primary")
+						@Button("Contact Me", "/contact", "secondary")
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+}
