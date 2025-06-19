@@ -244,10 +244,15 @@ templ ContactPage() {
 }
 
 templ ContactMethod(label, text, href string) {
-	<div class="contact-method">
-		<strong class="contact-label">{ label }:</strong>
-		<a href={ templ.URL(href) } class="contact-link">{ text }</a>
-	</div>
+    <div class="contact-method">
+       <strong class="contact-label">{ label }:</strong>
+       // Check if the link is external (starts with http or https)
+       if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+          <a href={ templ.URL(href) } class="contact-link" target="_blank" rel="noopener noreferrer">{ text }</a>
+       } else {
+          <a href={ templ.URL(href) } class="contact-link">{ text }</a>
+       }
+    </div>
 }
 
 templ NotFoundPage() {

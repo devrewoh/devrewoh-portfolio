@@ -1,0 +1,47 @@
+# flyctl launch added from .gitignore
+# Binaries
+**/bin
+**/*.exe
+**/*.exe~
+**/*.dll
+**/*.so
+**/*.dylib
+
+# Build artifacts
+**/tmp
+**/*_templ.go
+
+# Test artifacts
+**/*.test
+**/*.out
+**/coverage.html
+**/coverage.out
+
+# Environment files
+**/.env
+**/.env.local
+
+# IDE files
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+**/*~
+
+# OS files
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+
+# Logs
+**/*.log
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+fly.toml
