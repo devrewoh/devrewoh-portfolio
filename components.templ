@@ -93,11 +93,10 @@ templ HomePage(name, tagline string) {
 			<div class="container">
 				<h2 class="section-title">Technical Skills</h2>
 				<div class="skills-grid">
-					@Card("Backend Development", "Learning to build robust APIs and services in Go, with a focus on clean code and simplicity.", "")
+					@Card("Backend Development", "Build robust APIs and services in Go, with a focus on clean code and simplicity.", "")
 					@Card("Data-Driven Design", "Exploring how data flows through systems, including modeling, transformations, and building APIs with structure and clarity.", "")
-					@Card("Database Fundamentals", "Working with PostgreSQL and SQL to design practical schemas and write effective queries.", "")
-					@Card("Testing & Quality", "Practicing unit testing and learning CI/CD principles to build more reliable software.", "")
-					@Card("Cloud & DevOps Basics", "Exploring deployment workflows using Docker and beginner AWS projects.", "")
+					@Card("Relational Database Fundamentals", "Utilizing PostgreSQL and SQL to design practical schemas and write effective queries.", "")
+					@Card("Testing & Quality", "Unit testing and CI/CD principles to build more reliable software.", "")
 				</div>
 			</div>
 		</section>
@@ -108,7 +107,7 @@ templ HomePage(name, tagline string) {
 				<div class="projects-grid">
 					@ProjectCard("Newsletter Analytics Platform (In Progress)", "A personal project aimed at helping creators analyze newsletter performance. Currently building the MVP using Go and minimal UI to focus on insights that matter.", "Go, Chi, sqlc, SQLite, templ, Charts.js, Stripe")
 					@ProjectCard("BookBot", "A command-line Python tool that analyzes plain-text books to report word and character frequency", "Python, File I/O, String Processing")
-					@ProjectCard("TBD", "Exciting new project currently in development. Stay tuned!", "")
+					@ProjectCard("Go-Disc-Net", "Network discovery CLI tool written in Go", "Go, Goroutines")
 				</div>
 			</div>
 		</section>
@@ -162,35 +161,10 @@ templ AboutPage() {
 				<p>
 				    Outside of technical systems, I’m passionate about education, mentorship, and helping businesses grow with technology that’s thoughtful and sustainable. Whether it’s a small CLI tool or a platform used by thousands, I want the things I build to stand the test of time.
 				</p>
-
-				<h2>My Learning Strategy</h2>
-				<p>
-					I’m mostly self-taught, but not without guidance. I’ve taken instructor-led cybersecurity courses, studied core CS concepts independently, and earned certifications like A+, Security+, Splunk, and CEH. Along the way, I’ve learned to revisit the fundamentals often—drawing boundaries between what’s essential, what’s novel, and what’s just noise.
-				</p>
-				<p>
-                	Go and Python are my primary tools for learning and building. I chose Go because I prefer compiled languages with strict rules that catch errors early. Its simplicity, powerful standard library, and seamless toolchain make it an ideal choice for developing reliable backend systems with confidence. The built-in testing framework and vibrant community are added bonuses.
-                </p>
-				<p>
-                	Python, on the other hand, is undeniably relevant in today’s ecosystem. Its mature libraries and wide applicability—from scripting to machine learning—make it a perfect complement to Go, especially for exploring different layers of the software stack.
-                </p>
-				<p>
-                	Boot.dev deserves special credit for helping a few lightbulb moments click into place for me. While I’m not entirely self-taught, I’ve had to curate many of my own learning resources and build a structured path forward. I’m also experimenting with AI tools—cautiously and intentionally—as they’ve significantly boosted my productivity, though I aim to remain grounded in first-principles understanding.
-                </p>
-				<p>
-					Here are a few of my favorite learning resources that have shaped how I learn and build:
-				</p>
-				<ul class="learning-platforms">
-					<li><a href="https://www.boot.dev/" target="_blank" rel="noopener">Boot.dev</a></li>
-					<li><a href="https://threedots.tech/" target="_blank" rel="noopener">three dots labs</a></li>
-					<li><a href="https://www.ardanlabs.com/" target="_blank" rel="noopener">Ardan Labs</a></li>
-					<li><a href="https://github.com/quii/learn-go-with-tests" target="_blank" rel="noopener">Learn Go With Tests</a></li>
-					<li><a href="https://lets-go.alexedwards.net/" target="_blank" rel="noopener">Let's Go by Alex Edwards</a></li>
-				</ul>
 			</div>
 		</div>
 	</div>
 </section>
-
 
 		<section class="values">
 			<div class="container">
