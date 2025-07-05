@@ -7,4 +7,4 @@ require (
 	github.com/magefile/mage v1.15.0
 )
 
-require github.com/a-h/templ v0.3.898
+require github.com/a-h/templ v0.3.906

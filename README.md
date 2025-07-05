@@ -1,15 +1,6 @@
-# Devrewoh Portfolio
-
-Modern portfolio website built with Go, Templ, Chi router, and vanilla CSS. Features mobile-first responsive design with dark gray/forest green theming and comprehensive test coverage.
-
-## Tech Stack
-
-- **Backend**: Go 1.24.4 + Chi router + Templ
-- **Frontend**: Vanilla CSS with CSS Grid and Flexbox
-- **Build**: Mage (Go-based automation)
-- **Testing**: Go testing with 65.9% coverage
-- **Development**: Air for hot reloading
-- **Deploy**: Fly.io + Docker
+# Prerequisites
+- Go 1.24+ installed
+- Git
 
 ## Quick Start
 
@@ -17,6 +8,14 @@ Modern portfolio website built with Go, Templ, Chi router, and vanilla CSS. Feat
 # Clone and setup
 git clone <repo-url>
 cd devrewoh-portfolio
+
+# Install required tools
+go install github.com/magefile/mage@latest
+go install github.com/a-h/templ/cmd/templ@latest
+
+# Add Go bin to PATH if not already done
+echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+
 mage setup          # Creates directories and installs tools
 
 # Development
