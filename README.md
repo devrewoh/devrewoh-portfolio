@@ -6,7 +6,7 @@
 
 ```bash
 # Clone and setup
-git clone <repo-url>
+git clone <https://github.com/devrewoh/devrewoh-portfolio>
 cd devrewoh-portfolio
 
 # Install required tools
@@ -74,12 +74,12 @@ Check tool status with `mage info`.
 
 ## Testing
 
-- **Test Coverage**: 65.9% with comprehensive test suite
-- **What's Tested**: All HTTP handlers, security middleware, static file serving, configuration
-- **What's Not**: Server startup/shutdown (integration tests), template error paths
+- **Test Coverage**: 66.4% with comprehensive test suite
+- **What's Tested**: All HTTP handlers, security middleware, static file serving, configuration, rate limiting
+- **What's Not Tested**: Server startup/shutdown (`main()`, `Start()` functions), template error handling paths
 
 ```bash
-mage test                    # Run tests
+mage test                   # Run tests
 mage testcoverage           # Generate coverage report
 open coverage.html          # View detailed coverage
 ```
@@ -132,8 +132,15 @@ Configured for:
 ### Fly.io (Recommended)
 
 ```bash
-# Install Fly CLI
-curl -L https://fly.io/install.sh | sh
+# Install Fly CLI (XDG-compliant)
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+FLYCTL_INSTALL="$XDG_DATA_HOME/fly" curl -L https://fly.io/install.sh | sh
+export PATH="$XDG_DATA_HOME/fly/bin:$PATH"
+
+# Add exports to ~/.bashrc for persistence
+echo 'export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"' >> ~/.bashrc
+echo 'export FLYCTL_INSTALL="$XDG_DATA_HOME/fly"' >> ~/.bashrc
+echo 'export PATH="$FLYCTL_INSTALL/bin:$PATH"' >> ~/.bashrc
 
 # Login and deploy
 fly auth login
