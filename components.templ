@@ -5,23 +5,20 @@ import "strings"
 templ BaseLayout(title, description string) {
 	<!DOCTYPE html>
 	<html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<meta name="description" content={ description }/>
-		<title>{ title }</title>
-		<link rel="stylesheet" href="/static/css/styles.css"/>
-		<link rel="preconnect" href="https://fonts.googleapis.com"/>
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-	</head>
-	<body>
-		@Header()
-		<main class="main">
-			{ children... }
-		</main>
-		@Footer()
-	</body>
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta name="description" content={ description }/>
+			<title>{ title }</title>
+			<link rel="stylesheet" href="/static/css/styles.css"/>
+		</head>
+		<body>
+			@Header()
+			<main class="main">
+				{ children... }
+			</main>
+			@Footer()
+		</body>
 	</html>
 }
 
@@ -43,7 +40,7 @@ templ Header() {
 templ Footer() {
 	<footer class="footer">
 		<div class="footer-content">
-			<p>&copy; 2025 Devrewoh. Built with Go, Templ, and ❤️</p>
+			<p>&copy; 2025 Chris Hower. Built with Go & Templ</p>
 		</div>
 	</footer>
 }
@@ -72,49 +69,74 @@ templ Button(text, href, buttonType string) {
 }
 
 templ HomePage(name, tagline string) {
-	@BaseLayout("Home – Backend-Focused Go Developer", "Personal site of a Go developer building scalable backend systems with clarity and care.") {
+	@BaseLayout("Chris Hower – Go Developer", "Go developer learning backend systems and building real projects.") {
 		<section class="hero">
 			<div class="hero-content">
 				<h1 class="hero-title">Hi, I'm <span class="hero-name">{ name }</span></h1>
 				<p class="hero-tagline">{ tagline }</p>
 				<p class="hero-description">
-					I’ve been obsessed with computers since childhood—from building PCs to repairing radar systems in the Navy.
-					My path has taken me through the military, finance, and IT support, always centered around problem-solving.
-					Along the way, I’ve studied cybersecurity and backend development, and I’m now focused on building secure, reliable software—especially with Go.
+					Former Navy electronics technician learning backend development with Go.
+					I'm building an image compression API to understand service architecture,
+					databases, and deployment. Seeking my first software engineering role.
 				</p>
 				<div class="hero-actions">
-					@Button("View My GitHub", "https://github.com/devrewoh", "primary")
+					@Button("View GitHub", "https://github.com/devrewoh", "primary")
 					@Button("Get In Touch", "/contact", "secondary")
 				</div>
 			</div>
 		</section>
-
-		<section class="skills">
+		<section class="recent-work">
 			<div class="container">
-				<h2 class="section-title">Technical Skills</h2>
-				<div class="skills-grid">
-					@Card("Backend Development", "Build robust APIs and services in Go, with a focus on clean code and simplicity.", "")
-					@Card("Data-Driven Design", "Exploring how data flows through systems, including modeling, transformations, and building APIs with structure and clarity.", "")
-					@Card("Relational Database Fundamentals", "Utilizing PostgreSQL and SQL to design practical schemas and write effective queries.", "")
-					@Card("Testing & Quality", "Unit testing and CI/CD principles to build more reliable software.", "")
+				<h2 class="section-title">Current Project</h2>
+				<div class="projects-grid">
+					@FeaturedProject()
+				</div>
+				<h2 class="section-title" style="margin-top: 4rem;">Other Work</h2>
+				<div class="projects-grid">
+					@ProjectCard("Personal Portfolio", "This site. Server-side rendered with Go, Templ templates, and deployed on Fly.io with Docker.", "Go, Chi, Templ, Docker, Fly.io", "https://github.com/devrewoh/devrewoh-portfolio")
 				</div>
 			</div>
 		</section>
-
-		<section class="recent-work">
+		<section class="skills">
 			<div class="container">
-				<h2 class="section-title">Recent Projects</h2>
-				<div class="projects-grid">
-					@ProjectCard("Newsletter Analytics Platform (In Progress)", "A personal project aimed at helping creators analyze newsletter performance. Currently building the MVP using Go and minimal UI to focus on insights that matter.", "Go, Chi, sqlc, SQLite, templ, Charts.js, Stripe")
-					@ProjectCard("BookBot", "A command-line Python tool that analyzes plain-text books to report word and character frequency", "Python, File I/O, String Processing")
-					@ProjectCard("Go-Disc-Net", "Network discovery CLI tool written in Go", "Go, Goroutines")
+				<h2 class="section-title">What I'm Learning</h2>
+				<div class="skills-grid">
+					@Card("Backend Development", "Building REST APIs with Go. Learning about routing, middleware, database integration, and how to structure backend services.", "")
+					@Card("Go Programming", "Working with goroutines, error handling, and Go's standard library. Learning idiomatic Go patterns and best practices.", "")
+					@Card("Event-Driven Architecture", "Exploring async processing with job queues, background workers, and message-driven systems. Learning when and why to decouple services.", "")
+					@Card("Databases", "PostgreSQL fundamentals: schema design, writing queries, migrations, and connecting databases to Go applications.", "")
+					@Card("Deployment & Linux", "Docker basics, Linux systems, shell scripting, and debugging deployment issues. Interested in POSIX-compliant tools and portable workflows.", "")
 				</div>
 			</div>
 		</section>
 	}
 }
 
-templ ProjectCard(title, description, technologies string) {
+templ FeaturedProject() {
+	<div class="project-card" style="border: 2px solid var(--color-primary); background: rgba(255, 149, 0, 0.03);">
+		<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+			<h3 class="project-title" style="margin: 0;">Image Compression API</h3>
+			<span style="background: var(--color-primary); color: var(--color-bg); padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">IN PROGRESS</span>
+		</div>
+		<p class="project-description">
+			Learning project to understand backend architecture, concurrent processing, and API design.
+			Building an image compression service with job queuing, user authentication, and database
+			design. Working through deployment challenges and learning as I build.
+		</p>
+		<div class="project-tech">
+			<span class="tech-label">Learning:</span>
+			<span class="tech-list">Go, PostgreSQL, Docker, REST APIs, Service Architecture</span>
+		</div>
+		<div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+			<p style="color: var(--color-text-muted); font-size: 0.9rem; margin: 0;">
+				<strong style="color: var(--color-text);">Note:</strong> Building in public to learn backend development.
+				Code is private while I figure things out.
+			</p>
+		</div>
+	</div>
+}
+
+templ ProjectCard(title, description, technologies, githubURL string) {
 	<div class="project-card">
 		<h3 class="project-title">{ title }</h3>
 		<p class="project-description">{ description }</p>
@@ -122,64 +144,68 @@ templ ProjectCard(title, description, technologies string) {
 			<span class="tech-label">Technologies:</span>
 			<span class="tech-list">{ technologies }</span>
 		</div>
+		if githubURL != "" {
+			<div style="margin-top: 1rem;">
+				<a href={ templ.URL(githubURL) } target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem;">
+					View Code →
+				</a>
+			</div>
+		}
 	</div>
 }
 
 templ AboutPage() {
-	@BaseLayout("About - Backend-Focused Go Developer", "Learn more about my journey as a Go developer and my passion for clean, efficient code") {
+	@BaseLayout("About – Chris Hower", "Learn about my journey from Navy electronics to backend engineering") {
 		<section class="about-hero">
 			<div class="container">
 				<h1 class="page-title">About Me</h1>
-				<p class="page-subtitle">Passionate about building scalable systems</p>
+				<p class="page-subtitle">Building reliable systems with intention</p>
 			</div>
 		</section>
-
-<section class="about-content">
-	<div class="container">
-		<div class="about-grid">
-			<div class="about-text">
-				<h2>My Journey</h2>
-				<p>
-					I've been passionate about computers ever since my 13th birthday, when all I wanted was an old hand-me-down PC from a family friend. That one gift opened the door to a whole new world beyond my neighborhood.
-				</p>
-				<p>
-					By high school, I had replaced traditional electives with computer programming courses at Erie County Technical School. I started with BASIC, then picked up Visual Basic, HTML, CSS, JavaScript, and finally C#. My friends and I spent weekends hosting LAN parties in garages, learning to troubleshoot networking issues and configure switches and routers ourselves.
-				</p>
-				<p>
-					Later, I joined the U.S. Navy, where I received hands-on training in electronics theory and worked on everything from radar-jamming systems to analog and digital avionics, down to the component level. I learned to read schematics, use signal generators and oscilloscopes, and think in binary, octal, hexadecimal, and logic gates. I supported legacy systems written in COBOL and maintained modern test benches built with C++.
-				</p>
-				<p>
-					During this time, I also pursued competitive gaming at the highest levels for over 15 years, achieving multiple "world firsts" and competing for world championships. This taught me discipline, strategic thinking, and how to perform under pressure while working with teams toward shared goals.
-				</p>
-				<p>
-					My time in the Navy was one of the most meaningful chapters of my life. But after several deployments, I found myself wanting a path that felt more connected to everyday life. I tried roles in sales and financial services, but I kept coming back to my first love: computers. For a while, I hesitated to make it a career because I didn't want to lose the joy it gave me. But eventually I realized that building software can be just as fulfilling as anything I had ever done.
-				</p>
-				<p>
-					Programming continues to challenge and inspire me. It rewards curiosity, discipline, and persistence. There's always something new to explore, and each project brings an opportunity to grow. That's what keeps me coming back—it's a lifelong craft I'm proud to be part of.
-				</p>
-				<h2>Areas of Focus</h2>
-				<p>
-					As a father to an amazing little girl, I care deeply about the future—both in the world we build and the people we build it for. My work is guided by curiosity, intention, and a long-term mindset.
-				</p>
-				<p>
-					I'm drawn to the full spectrum of computing, from hardware-level problem solving and reverse engineering to software architecture, backend systems, and network performance. I have a strong interest in cybersecurity, developer experience, and the overlap between clean code and real-world reliability. I'm particularly drawn to standardized configurations and POSIX compliance, spending time mastering tools like tmux and Neovim to maximize efficiency and build workflows that are both powerful and portable across platforms.
-				</p>
-				<p>
-				    Outside of technical systems, I'm passionate about education, mentorship, and helping businesses grow with technology that's thoughtful and sustainable. Whether it's a small CLI tool or a platform used by thousands, I want the things I build to stand the test of time.
-				</p>
+		<section class="about-content">
+			<div class="container">
+				<div class="about-grid">
+					<div class="about-text">
+						<h2>Background</h2>
+						<p>
+							I'm learning backend development after spending time in the Navy working on
+							electronics systems. I got interested in programming because I like understanding
+							how things work at a fundamental level—whether that's debugging a circuit board
+							or figuring out why an API isn't responding correctly.
+						</p>
+						<p>
+							I'm teaching myself Go and backend concepts by building real projects. Right now,
+							I'm working on an image compression API to learn about service architecture,
+							databases, concurrent processing, and deployment. It's messy and incomplete,
+							but I'm learning by doing.
+						</p>
+						<p>
+							I like Go because it's straightforward and doesn't hide complexity. I'm drawn
+							to backend work because I prefer working with data, APIs, and servers rather
+							than UI. I also enjoy working with Linux systems and learning about deployment,
+							scripting, and developer tooling. I appreciate POSIX-compliant tools and
+							portable workflows—things that work the same way across different environments.
+						</p>
+						<h2>What I'm Looking For</h2>
+						<p>
+							My first software engineering role where I can learn from experienced developers,
+							contribute to real systems, and grow my skills in backend development, infrastructure,
+							or DevOps. I'm interested in the full developer lifecycle—writing code, deploying it,
+							monitoring it, and improving the tools that make development easier. I'm comfortable
+							being the least experienced person in the room—that's where I'll learn the most.
+						</p>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</section>
-
+		</section>
 		<section class="values">
 			<div class="container">
-				<h2 class="section-title">Core Values</h2>
+				<h2 class="section-title">How I Approach Learning</h2>
 				<div class="values-grid">
-					@ValueCard("Clean Code", "Writing code that is readable, maintainable, and follows Go idioms and best practices.")
-					@ValueCard("Performance", "Optimizing for efficiency and scalability while maintaining code clarity and simplicity.")
-					@ValueCard("Continuous Learning", "Staying updated with Go ecosystem developments and contributing to the community.")
-					@ValueCard("Collaboration", "Working effectively in teams and sharing knowledge through code reviews and mentoring.")
+					@ValueCard("Build to Learn", "I learn best by building real projects, making mistakes, and figuring out what broke and why.")
+					@ValueCard("Ask Questions", "I'm not afraid to admit when I don't understand something. Better to ask than pretend.")
+					@ValueCard("Document as I Go", "I write things down to understand them better and help future me remember what I learned.")
+					@ValueCard("Focus on Fundamentals", "Understanding how things actually work matters more than memorizing frameworks.")
 				</div>
 			</div>
 		</section>
@@ -194,27 +220,28 @@ templ ValueCard(title, description string) {
 }
 
 templ ContactPage() {
-	@BaseLayout("Contact - Backend-Focused Go Developer", "Reach out to collaborate on Go projects or share ideas in backend development") {
+	@BaseLayout("Contact – Chris Hower", "Get in touch about backend engineering opportunities") {
 		<section class="contact-hero">
 			<div class="container">
 				<h1 class="page-title">Get In Touch</h1>
-				<p class="page-subtitle">Open to collaboration, learning, and problem-solving</p>
+				<p class="page-subtitle">Open to backend, infrastructure, and DevOps roles</p>
 			</div>
 		</section>
-
 		<section class="contact-content">
 			<div class="container">
 				<div class="contact-grid">
 					<div class="contact-info">
-						<h2>Start a Conversation</h2>
+						<h2>Let's Talk</h2>
 						<p>
-							Whether you're building something exciting in backend or just love solving complex problems, I'd love to hear from you.
-							I’m always open to exchanging ideas or exploring new opportunities in tech.
+							I'm looking for my first software engineering role where I can learn backend
+							development, infrastructure tooling, or DevOps from experienced engineers.
+							I'm drawn to the entire developer lifecycle—from writing code to deploying
+							and maintaining systems in production.
 						</p>
 						<div class="contact-methods">
 							@ContactMethod("Email", "devrewoh@proton.me", "mailto:devrewoh@proton.me")
 							@ContactMethod("LinkedIn", "Connect with me", "https://www.linkedin.com/in/christopherrhower/")
-							@ContactMethod("GitHub", "View my repositories", "https://github.com/devrewoh")
+							@ContactMethod("GitHub", "View my work", "https://github.com/devrewoh")
 						</div>
 					</div>
 				</div>
@@ -224,15 +251,14 @@ templ ContactPage() {
 }
 
 templ ContactMethod(label, text, href string) {
-    <div class="contact-method">
-       <strong class="contact-label">{ label }:</strong>
-       // Check if the link is external (starts with http or https)
-       if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
-          <a href={ templ.URL(href) } class="contact-link" target="_blank" rel="noopener noreferrer">{ text }</a>
-       } else {
-          <a href={ templ.URL(href) } class="contact-link">{ text }</a>
-       }
-    </div>
+	<div class="contact-method">
+		<strong class="contact-label">{ label }:</strong>
+		if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+			<a href={ templ.URL(href) } class="contact-link" target="_blank" rel="noopener noreferrer">{ text }</a>
+		} else {
+			<a href={ templ.URL(href) } class="contact-link">{ text }</a>
+		}
+	</div>
 }
 
 templ NotFoundPage() {

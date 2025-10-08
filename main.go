@@ -146,7 +146,7 @@ func (s *Server) renderTemplate(w http.ResponseWriter, r *http.Request, componen
 
 // Page handlers
 func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
-	component := HomePage("Chris", "Full-Stack Developer & Go Enthusiast")
+	component := HomePage("Chris", "Backend developer building with Go")
 	s.renderTemplate(w, r, component, "home")
 }
 

@@ -1,5 +1,5 @@
 # Prerequisites
-- Go 1.24+ installed
+- Go 1.25+ installed
 - Git
 
 ## Quick Start
@@ -74,7 +74,7 @@ Check tool status with `mage info`.
 
 ## Testing
 
-- **Test Coverage**: 66.4% with comprehensive test suite
+- **Test Coverage**: Comprehensive test suite with all critical paths covered
 - **What's Tested**: All HTTP handlers, security middleware, static file serving, configuration, rate limiting
 - **What's Not Tested**: Server startup/shutdown (`main()`, `Start()` functions), template error handling paths
 
@@ -87,7 +87,7 @@ open coverage.html          # View detailed coverage
 ## Build Artifacts
 
 - **`bin/`** - Compiled binaries
-- **`tmp/`** - Air hot reload temporary files  
+- **`tmp/`** - Air hot reload temporary files
 - **`*_templ.go`** - Generated template files
 - **`coverage.out`** - Test coverage data
 - **`coverage.html`** - HTML coverage report
@@ -106,7 +106,7 @@ devrewoh-portfolio/
 ├── .air.toml           # Hot reload configuration
 ├── static/
 │   ├── css/
-│   │   └── styles.css  # Dark theme with responsive design
+│   │   └── styles.css  # Modern amber/rust theme with responsive design
 │   ├── images/         # Static images
 │   └── js/             # Static JavaScript
 ├── bin/               # Compiled binaries (created by build)
@@ -132,10 +132,9 @@ Configured for:
 ### Fly.io (Recommended)
 
 ```bash
-# Install Fly CLI (XDG-compliant)
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-FLYCTL_INSTALL="$XDG_DATA_HOME/fly" curl -L https://fly.io/install.sh | sh
-export PATH="$XDG_DATA_HOME/fly/bin:$PATH"
+# Install Fly CLI
+curl -L https://fly.io/install.sh | sh
+export PATH="$HOME/.fly/bin:$PATH"
 
 # Add exports to ~/.bashrc for persistence
 echo 'export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"' >> ~/.bashrc
@@ -167,7 +166,7 @@ scp -r static/ server:/path/
 
 ### Technical
 - **Type-Safe Templates**: Compile-time template checking with Templ
-- **Comprehensive Testing**: 65.9% coverage focusing on critical paths
+- **Comprehensive Testing**: Full test coverage of critical paths
 - **Security Headers**: CSP, HSTS, XSS protection
 - **Rate Limiting**: Built-in request throttling
 - **Graceful Shutdown**: Clean server termination
@@ -175,7 +174,7 @@ scp -r static/ server:/path/
 
 ### Design
 - **Mobile-First**: Responsive design starting from 320px
-- **Dark Theme**: Professional dark gray with forest green accents
+- **Modern Design**: Amber/rust color palette with glassmorphic cards
 - **Accessible**: Proper contrast ratios and semantic HTML
 - **Performance**: Minimal CSS/JS, optimized loading
 
