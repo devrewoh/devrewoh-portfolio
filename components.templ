@@ -69,15 +69,15 @@ templ Button(text, href, buttonType string) {
 }
 
 templ HomePage(name, tagline string) {
-	@BaseLayout("Chris Hower – Go Developer", "Go developer learning backend systems and building real projects.") {
+	@BaseLayout("Chris Hower | Go Developer", "Go developer learning backend systems and building real projects.") {
 		<section class="hero">
 			<div class="hero-content">
 				<h1 class="hero-title">Hi, I'm <span class="hero-name">{ name }</span></h1>
 				<p class="hero-tagline">{ tagline }</p>
 				<p class="hero-description">
 					Former Navy electronics technician learning backend development with Go.
-					I'm building an image compression API to understand service architecture,
-					databases, and deployment. Seeking my first software engineering role.
+					Building an image compression API to understand service architecture,
+					databases, and deployment. Looking for my first software engineering role.
 				</p>
 				<div class="hero-actions">
 					@Button("View GitHub", "https://github.com/devrewoh", "primary")
@@ -155,7 +155,7 @@ templ ProjectCard(title, description, technologies, githubURL string) {
 }
 
 templ AboutPage() {
-	@BaseLayout("About – Chris Hower", "Learn about my journey from Navy electronics to backend engineering") {
+	@BaseLayout("About | Chris Hower", "Learn about my journey from Navy electronics to backend engineering") {
 		<section class="about-hero">
 			<div class="container">
 				<h1 class="page-title">About Me</h1>
@@ -168,31 +168,33 @@ templ AboutPage() {
 					<div class="about-text">
 						<h2>Background</h2>
 						<p>
-							I'm learning backend development after spending time in the Navy working on
-							electronics systems. I got interested in programming because I like understanding
-							how things work at a fundamental level—whether that's debugging a circuit board
-							or figuring out why an API isn't responding correctly.
+							I'm learning backend development after working on electronics systems in the Navy.
+							I got interested in programming because I like understanding how things work at a
+							fundamental level. Debugging a circuit board or figuring out why an API isn't
+							responding correctly, it's the same kind of problem-solving.
 						</p>
 						<p>
-							I'm teaching myself Go and backend concepts by building real projects. Right now,
+							I'm teaching myself Go and backend concepts by building real projects. Right now
 							I'm working on an image compression API to learn about service architecture,
 							databases, concurrent processing, and deployment. It's messy and incomplete,
-							but I'm learning by doing.
+							but that's how I learn best.
 						</p>
 						<p>
 							I like Go because it's straightforward and doesn't hide complexity. I'm drawn
-							to backend work because I prefer working with data, APIs, and servers rather
-							than UI. I also enjoy working with Linux systems and learning about deployment,
-							scripting, and developer tooling. I appreciate POSIX-compliant tools and
-							portable workflows—things that work the same way across different environments.
+							to backend work because I prefer working with data, APIs, and servers over UI.
+							I also enjoy working with Linux systems and learning about deployment, scripting,
+							and developer tooling. I appreciate POSIX-compliant tools and portable workflows.
+							Things that work the same way across different environments.
 						</p>
 						<h2>What I'm Looking For</h2>
 						<p>
-							My first software engineering role where I can learn from experienced developers,
-							contribute to real systems, and grow my skills in backend development, infrastructure,
-							or DevOps. I'm interested in the full developer lifecycle—writing code, deploying it,
-							monitoring it, and improving the tools that make development easier. I'm comfortable
-							being the least experienced person in the room—that's where I'll learn the most.
+							My first software engineering role where I can learn from experienced developers
+							and contribute to real systems. I want to grow my skills in backend development,
+							infrastructure, or DevOps. I'm interested in the full developer lifecycle. Writing
+							code, deploying it, monitoring it, and improving the tools that make development
+							easier. I'm comfortable being the least experienced person in the room. That's
+							where I'll learn the most. I also work well independently and can figure things
+							out on my own when needed.
 						</p>
 					</div>
 				</div>
@@ -220,7 +222,7 @@ templ ValueCard(title, description string) {
 }
 
 templ ContactPage() {
-	@BaseLayout("Contact – Chris Hower", "Get in touch about backend engineering opportunities") {
+	@BaseLayout("Contact | Chris Hower", "Get in touch about backend engineering opportunities") {
 		<section class="contact-hero">
 			<div class="container">
 				<h1 class="page-title">Get In Touch</h1>
@@ -235,8 +237,9 @@ templ ContactPage() {
 						<p>
 							I'm looking for my first software engineering role where I can learn backend
 							development, infrastructure tooling, or DevOps from experienced engineers.
-							I'm drawn to the entire developer lifecycle—from writing code to deploying
-							and maintaining systems in production.
+							I'm drawn to the entire developer lifecycle. From writing code to deploying
+							and maintaining systems in production. I work well independently but also
+							value learning from others.
 						</p>
 						<div class="contact-methods">
 							@ContactMethod("Email", "devrewoh@proton.me", "mailto:devrewoh@proton.me")
