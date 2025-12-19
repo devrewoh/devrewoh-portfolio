@@ -105,6 +105,7 @@ func (s *Server) setupRoutes() {
 	s.router.Get("/", s.handleHome)
 	s.router.Get("/about", s.handleAbout)
 	s.router.Get("/contact", s.handleContact)
+	s.router.Get("/compress", s.handleCompress) // for batch image compression api service
 
 	// Health check
 	s.router.Get("/health", s.handleHealth)
@@ -158,6 +159,11 @@ func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleContact(w http.ResponseWriter, r *http.Request) {
 	component := ContactPage()
 	s.renderTemplate(w, r, component, "contact")
+}
+
+func (s *Server) handleCompress(w http.ResponseWriter, r *http.Request) {
+	component := CompressPage()
+	s.renderTemplate(w, r, component, "compress")
 }
 
 func (s *Server) handle404(w http.ResponseWriter, r *http.Request) {
