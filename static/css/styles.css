@@ -633,8 +633,8 @@ section {
 
 .compress-pricing-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-8);
     margin-top: var(--space-12);
     max-width: 1200px;
     margin-left: auto;
@@ -650,12 +650,12 @@ section {
     display: flex;
     flex-direction: column;
     transition: var(--transition-base);
+    min-height: 450px; /* ADD THIS */
 }
 
 .pricing-card-featured {
     border: 2px solid var(--color-primary);
     background: rgba(255, 149, 0, 0.03);
-    transform: scale(1.05);
 }
 
 .pricing-card:hover {
@@ -665,7 +665,7 @@ section {
 }
 
 .pricing-card-featured:hover {
-    transform: scale(1.05) translateY(-4px);
+    transform: translateY(-4px);
 }
 
 .pricing-badge {
@@ -707,6 +707,8 @@ section {
 
 .pricing-features {
     list-style: none;
+    margin: 0;
+    padding: 0;
     margin-bottom: var(--space-8);
     flex-grow: 1;
 }
