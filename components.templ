@@ -287,16 +287,57 @@ templ NotFoundPage() {
 
 // image compression service below
 templ CompressPage() {
-	@BaseLayout("GoTiny | Image Compression API", "Fast, affordable image compression API. JPEG to WebP conversion with 40-90% file size reduction. Batch process up to 1000 images.") {
+	@BaseLayout(
+		"GoTiny | Image Compression API",
+		"Fast, affordable image compression API. JPEG to WebP conversion with 40–90% file size reduction.",
+	) {
 		<section class="compress-hero">
 			<div class="container">
-				<h1 class="page-title">Go Tiny</h1>
-				<p class="page-subtitle">Professional batch processing • JPEG→WebP • 40-90% reduction</p>
+				<h1 class="page-title">GoTiny</h1>
+				<p class="page-subtitle">
+					Professional batch image compression • JPEG → WebP • 40–90% smaller files
+				</p>
+			</div>
+		</section>
+		<section class="compress-pricing">
+			<div class="container">
 				<div class="compress-pricing-cards">
-					@PricingCard("Free", "$0", "100 images/month", []string{"No credit card required", "API access", "WebP conversion", "Batch processing (up to 100)"}, false)
-					@PricingCard("Starter", "$10", "1,500 images", []string{"$0.0067 per image", "26% cheaper than competitors", "Batch up to 1000 images", "Email support"}, false)
-					@PricingCard("Growth", "$39", "10,000 images", []string{"$0.0039 per image", "Best value", "Priority processing", "Advanced support"}, true)
-					@PricingCard("Professional", "$99", "50,000 images", []string{"$0.002 per image", "Enterprise-ready", "Dedicated support", "Custom SLA"}, false)
+					@PricingCard("Free", "$0", "100 images / month",
+						[]string{
+							"No credit card required",
+							"API access",
+							"WebP conversion",
+							"Batch processing (up to 100)",
+						},
+						false,
+					)
+					@PricingCard("Starter", "$10", "1,500 images",
+						[]string{
+							"$0.0067 per image",
+							"26% cheaper than competitors",
+							"Batch up to 1,000 images",
+							"Email support",
+						},
+						false,
+					)
+					@PricingCard("Growth", "$39", "10,000 images",
+						[]string{
+							"$0.0039 per image",
+							"Best value",
+							"Priority processing",
+							"Advanced support",
+						},
+						true,
+					)
+					@PricingCard("Professional", "$99", "50,000 images",
+						[]string{
+							"$0.002 per image",
+							"Enterprise-ready",
+							"Dedicated support",
+							"Custom SLA",
+						},
+						false,
+					)
 				</div>
 			</div>
 		</section>

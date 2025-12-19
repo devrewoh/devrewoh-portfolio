@@ -622,55 +622,72 @@ section {
     font-size: 1.25rem;
     color: var(--color-text-muted);
     text-align: center;
-    margin-bottom: var(--space-16);
+    margin-bottom: var(--space-12);
 }
 
 /* Compress Page - Pricing Cards */
 .compress-hero {
-    min-height: calc(100vh - 80px);
-    padding: var(--space-16) 0;
+    padding-top: var(--space-24);
+    padding-bottom: var(--space-8); /* was var(--space-16) */
+    text-align: center;
 }
 
+/* Pricing Section */
+.compress-pricing {
+    padding-top: var(--space-16);
+    margin-top: calc(-1 * var(--space-8));
+}
+
+/* Pricing Grid */
 .compress-pricing-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: var(--space-8);
-    margin-top: var(--space-12);
     max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+
+    /* Visual grouping */
+    background: rgba(0, 0, 0, 0.35);
+    padding: var(--space-10);
+    border-radius: var(--border-radius-lg);
 }
 
+/* Pricing Card */
 .pricing-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius-lg);
-    padding: var(--space-8);
     display: flex;
     flex-direction: column;
+    min-height: 460px;
+
+    background: rgba(20, 20, 20, 0.85); /* fallback surface */
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-8);
+
+    backdrop-filter: blur(10px);
     transition: var(--transition-base);
-    min-height: 450px; /* ADD THIS */
 }
 
 .pricing-card-featured {
     border: 2px solid var(--color-primary);
-    background: rgba(255, 149, 0, 0.03);
+    background: rgba(30, 20, 10, 0.9);
 }
 
+/* Hover */
 .pricing-card:hover {
     transform: translateY(-4px);
     border-color: rgba(255, 149, 0, 0.3);
-    box-shadow: var(--glow);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
 .pricing-card-featured:hover {
     transform: translateY(-4px);
 }
 
+/* Badge */
 .pricing-badge {
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--color-primary);
