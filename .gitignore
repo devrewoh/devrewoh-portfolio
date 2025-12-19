@@ -10,6 +10,9 @@ bin/
 tmp/
 *_templ.go
 
+# CSS
+styles_deprecated.css
+
 # Test artifacts
 *.test
 *.out
