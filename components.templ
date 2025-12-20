@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 templ BaseLayout(title, description string) {
 	<!DOCTYPE html>
@@ -357,6 +360,68 @@ templ PricingCard(name, price, credits string, features []string, featured bool)
 				<li>{ feature }</li>
 			}
 		</ul>
-		<button class="btn btn-primary" style="width: 100%; margin-top: auto;">Get Started</button>
+		<form method="POST" action="/checkout" style="width: 100%; margin-top: auto;">
+			if name == "Free" {
+				<input type="hidden" name="tier" value="free"/>
+				<button type="submit" class="btn btn-secondary" style="width: 100%;">Get Started</button>
+			} else if name == "Starter" {
+				<input type="hidden" name="tier" value="starter"/>
+				<button type="submit" class="btn btn-primary" style="width: 100%;">Get Started</button>
+			} else if name == "Growth" {
+				<input type="hidden" name="tier" value="growth"/>
+				<button type="submit" class="btn btn-primary" style="width: 100%;">Get Started</button>
+			} else {
+				<input type="hidden" name="tier" value="professional"/>
+				<button type="submit" class="btn btn-primary" style="width: 100%;">Get Started</button>
+			}
+		</form>
 	</div>
+}
+
+templ SuccessPage(apiKey, tier string, credits int, email string) {
+	@BaseLayout("Payment Successful | GoTiny", "Your API key is ready") {
+		<section class="compress-hero">
+			<div class="container" style="text-align: center;">
+				<h1 class="page-title">✅ Payment Successful!</h1>
+				<p class="page-subtitle">Your { tier } plan is now active</p>
+			</div>
+		</section>
+		<section style="padding: 3rem 0;">
+			<div class="container" style="max-width: 700px;">
+				<div class="card" style="padding: 2rem;">
+					<h2 style="margin-bottom: 1.5rem; color: var(--color-primary);">Your API Key</h2>
+					<div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 2px solid var(--color-primary);">
+						<code style="font-family: monospace; font-size: 0.95rem; word-break: break-all; color: #0f172a;">
+							{ apiKey }
+						</code>
+					</div>
+					<p style="color: var(--color-text-muted); margin-bottom: 1rem;">
+						<strong>⚠️ Important:</strong> Copy this API key now. For security reasons, we cannot show it again.
+					</p>
+					<div style="display: grid; gap: 1rem; margin-top: 2rem;">
+						<div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8fafc; border-radius: 6px;">
+							<span><strong>Plan:</strong></span>
+							<span>{ tier }</span>
+						</div>
+						<div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8fafc; border-radius: 6px;">
+							<span><strong>Credits:</strong></span>
+							<span>{ fmt.Sprintf("%d", credits) } images</span>
+						</div>
+						<div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8fafc; border-radius: 6px;">
+							<span><strong>Email:</strong></span>
+							<span>{ email }</span>
+						</div>
+					</div>
+					<div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
+						<h3 style="margin-bottom: 1rem;">Next Steps:</h3>
+						<ol style="color: var(--color-text-muted); line-height: 1.8; padding-left: 1.5rem;">
+							<li>Copy your API key above</li>
+							<li>Read the <a href="https://api.devrewoh.com" style="color: var(--color-primary);">API documentation</a></li>
+							<li>Start compressing images!</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
 }
