@@ -1,6 +1,5 @@
 # Build stage
 FROM golang:1.25.5-alpine AS builder
-
 WORKDIR /app
 
 # Install build tools
@@ -11,8 +10,11 @@ RUN apk add --no-cache ca-certificates git && \
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source
+# Copy ALL source files INCLUDING static directory
 COPY . .
+
+# Verify static files are present
+RUN ls -la static/css/ || echo "WARNING: static/css not found"
 
 # Generate templates and build
 RUN templ generate && \
@@ -21,15 +23,18 @@ RUN templ generate && \
 
 # Runtime stage
 FROM alpine:3.20
-
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates
 
-# Copy binary and static files
+# Copy binary
 COPY --from=builder /app/bin/devrewoh-portfolio ./
-COPY --from=builder /app/static ./static/
+
+# Copy static files explicitly
+COPY --from=builder /app/static/ ./static/
+
+# Verify static files copied
+RUN ls -la static/css/ && wc -l static/css/styles.css
 
 EXPOSE 8080
-
 CMD ["./devrewoh-portfolio"]
