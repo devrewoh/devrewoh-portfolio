@@ -425,3 +425,290 @@ templ SuccessPage(apiKey, tier string, credits int, email string) {
 		</section>
 	}
 }
+
+// API Documentation page - append this to the end of components.templ
+templ DocsPage() {
+	@BaseLayout(
+		"API Documentation | GoTiny",
+		"Complete API documentation for GoTiny image compression service",
+	) {
+		<section class="compress-hero">
+			<div class="container">
+				<h1 class="page-title">API Documentation</h1>
+				<p class="page-subtitle">Everything you need to integrate GoTiny into your application</p>
+			</div>
+		</section>
+		<section style="padding: 3rem 0;">
+			<div class="container" style="max-width: 900px;">
+				<!-- Quick Start -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Quick Start</h2>
+					<p style="margin-bottom: 1.5rem;">Compress your first image in under a minute:</p>
+					@CodeBlock("bash", `curl -X POST https://api.devrewoh.com/api/v1/batches \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "image_urls": ["https://example.com/image.jpg"],
+    "settings": {
+      "quality": 80,
+      "format": "webp"
+    }
+  }'`)
+				</div>
+				<!-- Base URL -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Base URL</h2>
+					@CodeBlock("text", "https://api.devrewoh.com/api/v1")
+				</div>
+				<!-- Authentication -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Authentication</h2>
+					<p style="margin-bottom: 1rem;">
+						All API requests require authentication via Bearer token. Include your API key in the Authorization header:
+					</p>
+					@CodeBlock("text", "Authorization: Bearer ic_your_api_key_here")
+					<p style="margin-top: 1rem; color: var(--color-text-muted);">
+						Get your API key by purchasing a plan on the <a href="/compress" style="color: var(--color-primary);">pricing page</a>.
+					</p>
+				</div>
+				<!-- Create Batch -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Create Batch</h2>
+					<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+						<span style="background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem;">POST</span>
+						<code style="font-size: 0.95rem;">/batches</code>
+					</div>
+					<p style="margin-bottom: 1.5rem;">Submit a batch of images for compression.</p>
+					<h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Request Body</h3>
+					@CodeBlock("json", `{
+  "image_urls": [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.png"
+  ],
+  "settings": {
+    "quality": 80,
+    "format": "webp",
+    "max_width": 1920,
+    "max_height": 1080
+  }
+}`)
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">Parameters</h3>
+					<div style="overflow-x: auto;">
+						<table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+							<thead>
+								<tr style="border-bottom: 2px solid var(--color-border);">
+									<th style="text-align: left; padding: 0.75rem; color: var(--color-text-muted);">Parameter</th>
+									<th style="text-align: left; padding: 0.75rem; color: var(--color-text-muted);">Type</th>
+									<th style="text-align: left; padding: 0.75rem; color: var(--color-text-muted);">Required</th>
+									<th style="text-align: left; padding: 0.75rem; color: var(--color-text-muted);">Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>image_urls</code></td>
+									<td style="padding: 0.75rem;">array</td>
+									<td style="padding: 0.75rem;">Yes</td>
+									<td style="padding: 0.75rem;">URLs of images to compress (1-1000)</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>settings.quality</code></td>
+									<td style="padding: 0.75rem;">integer</td>
+									<td style="padding: 0.75rem;">No</td>
+									<td style="padding: 0.75rem;">Output quality 1-100 (default: 80)</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>settings.format</code></td>
+									<td style="padding: 0.75rem;">string</td>
+									<td style="padding: 0.75rem;">No</td>
+									<td style="padding: 0.75rem;">"webp" or "jpeg" (default: webp)</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>settings.max_width</code></td>
+									<td style="padding: 0.75rem;">integer</td>
+									<td style="padding: 0.75rem;">No</td>
+									<td style="padding: 0.75rem;">Maximum output width in pixels</td>
+								</tr>
+								<tr>
+									<td style="padding: 0.75rem;"><code>settings.max_height</code></td>
+									<td style="padding: 0.75rem;">integer</td>
+									<td style="padding: 0.75rem;">No</td>
+									<td style="padding: 0.75rem;">Maximum output height in pixels</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">Response</h3>
+					@CodeBlock("json", `{
+  "batch_id": "a27dcd6c-a701-43e9-9376-6a702d715426",
+  "message": "Batch created successfully"
+}`)
+				</div>
+				<!-- Get Batch Status -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Get Batch Status</h2>
+					<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+						<span style="background: #3b82f6; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem;">GET</span>
+						<code style="font-size: 0.95rem;">/batches/:batch_id/status</code>
+					</div>
+					<p style="margin-bottom: 1.5rem;">Check the processing status of a batch.</p>
+					<h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Example Request</h3>
+					@CodeBlock("bash", `curl https://api.devrewoh.com/api/v1/batches/a27dcd6c-a701-43e9-9376-6a702d715426/status \
+  -H "Authorization: Bearer YOUR_API_KEY"`)
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">Response</h3>
+					@CodeBlock("json", `{
+  "batch_id": "a27dcd6c-a701-43e9-9376-6a702d715426",
+  "status": "completed",
+  "total_images": 2,
+  "completed": 2,
+  "failed": 0,
+  "images": [
+    {
+      "id": "661fc9f4-3125-4a1d-9acc-58bc6ab10729",
+      "status": "completed",
+      "original_size": 45230,
+      "compressed_size": 12450
+    }
+  ]
+}`)
+				</div>
+				<!-- Supported Formats -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Supported Formats</h2>
+					<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+						<div>
+							<h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Input Formats</h3>
+							<ul style="color: var(--color-text-muted); padding-left: 1.25rem;">
+								<li>JPEG / JPG</li>
+								<li>PNG</li>
+								<li>GIF</li>
+								<li>WebP</li>
+							</ul>
+						</div>
+						<div>
+							<h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Output Formats</h3>
+							<ul style="color: var(--color-text-muted); padding-left: 1.25rem;">
+								<li>WebP (recommended)</li>
+								<li>JPEG</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- Error Responses -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Error Responses</h2>
+					<p style="margin-bottom: 1rem;">All errors return JSON with an error message:</p>
+					@CodeBlock("json", `{
+  "error": "Unsupported output format: 'png'. Supported formats: jpeg, webp"
+}`)
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">HTTP Status Codes</h3>
+					<div style="overflow-x: auto;">
+						<table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+							<tbody>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>200</code></td>
+									<td style="padding: 0.75rem;">Success</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>400</code></td>
+									<td style="padding: 0.75rem;">Bad request (invalid parameters)</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>401</code></td>
+									<td style="padding: 0.75rem;">Unauthorized (invalid or missing API key)</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--color-border);">
+									<td style="padding: 0.75rem;"><code>429</code></td>
+									<td style="padding: 0.75rem;">Rate limit exceeded</td>
+								</tr>
+								<tr>
+									<td style="padding: 0.75rem;"><code>503</code></td>
+									<td style="padding: 0.75rem;">Service temporarily unavailable</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- Rate Limits -->
+				<div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Rate Limits</h2>
+					<ul style="color: var(--color-text-muted); line-height: 1.8; padding-left: 1.25rem;">
+						<li>100 requests per second per API key</li>
+						<li>Maximum 1,000 images per batch</li>
+						<li>Monthly image limits based on your plan</li>
+					</ul>
+				</div>
+				<!-- Code Examples -->
+				<div class="card" style="padding: 2rem;">
+					<h2 style="color: var(--color-primary); margin-bottom: 1rem;">Code Examples</h2>
+					<h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Go</h3>
+					@CodeBlock("go", `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "net/http"
+)
+
+func compressImages(apiKey string, urls []string) error {
+    payload := map[string]interface{}{
+        "image_urls": urls,
+        "settings": map[string]interface{}{
+            "quality": 80,
+            "format":  "webp",
+        },
+    }
+
+    body, _ := json.Marshal(payload)
+    req, _ := http.NewRequest("POST",
+        "https://api.devrewoh.com/api/v1/batches",
+        bytes.NewBuffer(body))
+
+    req.Header.Set("Authorization", "Bearer "+apiKey)
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+
+    return nil
+}`)
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">Python</h3>
+					@CodeBlock("python", `import requests
+
+def compress_images(api_key: str, urls: list[str]) -> dict:
+    response = requests.post(
+        "https://api.devrewoh.com/api/v1/batches",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "image_urls": urls,
+            "settings": {
+                "quality": 80,
+                "format": "webp"
+            }
+        }
+    )
+    return response.json()`)
+					<h3 style="font-size: 1rem; margin: 1.5rem 0 0.75rem;">JavaScript</h3>
+					@CodeBlock("javascript", "async function compressImages(apiKey, urls) {\n  const response = await fetch('https://api.devrewoh.com/api/v1/batches', {\n    method: 'POST',\n    headers: {\n      'Authorization': 'Bearer ' + apiKey,\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      image_urls: urls,\n      settings: {\n        quality: 80,\n        format: 'webp'\n      }\n    })\n  });\n  return response.json();\n}")
+				</div>
+				<!-- Back to Pricing -->
+				<div style="text-align: center; margin-top: 3rem;">
+					<p style="color: var(--color-text-muted); margin-bottom: 1rem;">Ready to get started?</p>
+					@Button("View Pricing", "/compress", "primary")
+				</div>
+			</div>
+		</section>
+	}
+}
+
+templ CodeBlock(language, code string) {
+	<div style="background: #1e293b; border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 0.5rem 0;">
+		<pre style="margin: 0; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.85rem; line-height: 1.6; color: #e2e8f0;"><code>{ code }</code></pre>
+	</div>
+}

@@ -165,6 +165,7 @@ func (s *Server) setupRoutes() {
 	s.router.Get("/about", s.handleAbout)
 	s.router.Get("/contact", s.handleContact)
 	s.router.Get("/compress", s.handleCompress)
+	s.router.Get("/compress/docs", s.handleDocs)
 	s.router.Post("/checkout", s.handleCheckout)
 	s.router.Get("/compress/success", s.handleSuccess)
 
@@ -223,6 +224,11 @@ func (s *Server) handleContact(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleCompress(w http.ResponseWriter, r *http.Request) {
 	component := CompressPage()
 	s.renderTemplate(w, r, component, "compress")
+}
+
+func (s *Server) handleDocs(w http.ResponseWriter, r *http.Request) {
+	component := DocsPage()
+	s.renderTemplate(w, r, component, "docs")
 }
 
 func (s *Server) handleCheckout(w http.ResponseWriter, r *http.Request) {
