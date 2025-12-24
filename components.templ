@@ -34,7 +34,12 @@ templ Header() {
 			<div class="nav-menu">
 				<a href="/" class="nav-link">Home</a>
 				<a href="/about" class="nav-link">About</a>
-				<a href="/compress" class="nav-link">GoTiny</a>
+				<div class="nav-dropdown">
+					<a href="/compress" class="nav-link">GoTiny ▾</a>
+					<div class="nav-dropdown-content">
+						<a href="/compress/docs">Documentation</a>
+					</div>
+				</div>
 				<a href="/contact" class="nav-link">Contact</a>
 			</div>
 		</nav>
@@ -327,17 +332,17 @@ templ CompressPage() {
 						[]string{
 							"$0.0039 per image",
 							"Best value",
-							"Priority processing",
-							"Advanced support",
+							"Batch up to 1,000 images",
+							"Email support",
 						},
 						true,
 					)
 					@PricingCard("Professional", "$99", "50,000 images",
 						[]string{
 							"$0.002 per image",
-							"Enterprise-ready",
-							"Dedicated support",
-							"Custom SLA",
+							"Lowest per-image cost",
+							"Batch up to 1,000 images",
+							"Email support",
 						},
 						false,
 					)
